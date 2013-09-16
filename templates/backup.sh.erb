@@ -1,0 +1,19 @@
+#!/bin/bash -v
+FILEDATE=`date +"%Y%m%d%H%M%S"`
+BACKUP_DIR=<%= @git_root %>
+S3_DIR="<%= @s3_dir %>/"
+
+echo "** Backing up Git repositories - $FILEDATE"
+T="$(date +%s)"
+
+# Create archive file.
+cd $BACKUP_DIR && tar zcf - * | gpg -e -u <%= @gpg_encryption_key %> -r <%= @gpg_encryption_key %> >git-$FILEDATE.tgz.gpg
+
+# Upload to S3
+s3cmd put git-$FILEDATE.tgz.gpg $S3_DIR
+
+# Remove local copy
+rm git-$FILEDATE.tgz.gpg
+
+T="$(($(date +%s)-T))"
+echo "** Backup completed in ${T} seconds."
