@@ -22,6 +22,7 @@ define git::repo (
     source   => $remote,
     identity => $identity,
     user     => $user,
+    owner    => $user,
     require  => Package['git']
   }
 }
