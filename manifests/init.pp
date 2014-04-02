@@ -1,6 +1,8 @@
 class git {
-  package { 'git':
-    name   => 'git-core',
-    ensure => 'present'
+  if !defined(Package['git-core']) {
+    package { 'git':
+      name   => 'git-core',
+      ensure => 'present'
+    }
   }
 }
